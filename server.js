@@ -94,6 +94,9 @@ app.get('/', (req, res) => {
           console.log("Error: " + err.message)
         })
 	}
+  else {
+    res.sendStatus(404)
+  }
 })
 
 
