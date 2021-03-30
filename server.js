@@ -20,11 +20,12 @@ app.get('/', (req, res) => {
           resp.on('end', () => {
             var datos = JSON.parse(data);
 			
-			console.log(datos);
+			    // console.log(datos);
 
             const img = new Image();
             //img.src = './failure.png'
             img.src = './space.jpg'
+            
             var c24h = parseInt(datos.payload['change_24']);
             if(c24h > 5000) {
               img.src = './space.jpg'
@@ -32,43 +33,54 @@ app.get('/', (req, res) => {
             else if(c24h > 10000) {
               img.src = './marte.png'
             }
+            
 
             var c = Canvas.createCanvas(800, 600);
             var ctx = c.getContext('2d');
             ctx.drawImage(img, 0, 0);
-            ctx.font = "80px Arial";
+            ctx.font = "120px Arial";
             ctx.textAlign = "center";
             ctx.fillStyle = "white";
 
-            ctx.fillText(`${req.query.criptomoneda.toUpperCase()}`, 400, 100);
+            ctx.strokeText(`${req.query.criptomoneda.toUpperCase()}`, 400, 150);
+            ctx.fillText(`${req.query.criptomoneda.toUpperCase()}`, 400, 150);
+            
             ctx.font = "72px Arial";
             ctx.lineWidth = 3;
-
-            ctx.strokeText(`${parseInt(datos.payload.last)} MXN - 1 ${req.query.criptomoneda.toUpperCase()}`, 400, 300);
-            ctx.fillText(`${parseInt(datos.payload.last)} MXN - 1 ${req.query.criptomoneda.toUpperCase()}`, 400, 300);
+            // console.log(parseInt(datos.payload.last).toString().length)
+            if(parseInt(datos.payload.last).toString().length < 5) {
+              ctx.strokeText(`${(datos.payload.last).substring(0, 7)} MXN - 1 ${req.query.criptomoneda.toUpperCase()}`, 400, 300)
+              ctx.fillText(`${(datos.payload.last).substring(0, 7)} MXN - 1 ${req.query.criptomoneda.toUpperCase()}`, 400, 300);
+            }
+            else {
+              ctx.strokeText(`${parseInt(datos.payload.last)} MXN - 1 ${req.query.criptomoneda.toUpperCase()}`, 400, 300);
+              ctx.fillText(`${parseInt(datos.payload.last)} MXN - 1 ${req.query.criptomoneda.toUpperCase()}`, 400, 300);
+            }
+            
            
             
             ctx.font = "32px Arial";
-            ctx.strokeText(`Cambio 24h: ${parseInt(datos.payload['change_24'])}`, 400, 350 )
-            ctx.fillText(`Cambio 24h: ${parseInt(datos.payload['change_24'])}`, 400, 350 )
             
-            ctx.font = "16px Arial"
+            ctx.strokeText(`Cambio 24h: ${(datos.payload['change_24']).toString().substring(0,5)} MXN`, 400, 350 )
+            ctx.fillText(`Cambio 24h: ${(datos.payload['change_24']).toString().substring(0,5)} MXN`, 400, 350 )
+            
+            ctx.font = "12px Arial"
 
 
 
             ctx.textAlign = "start";
             ctx.fillText('Fuente: api.bitso.com', 10, 566)
-            ctx.fillText(`Ultima actualizacion: ${new Date().getHours()}:${new Date().getUTCMinutes()}:${new Date().getUTCSeconds()}`	, 10, 584);
+            ctx.fillText(`Ultima actualizacion: ${new Date()/*.getHours()}:${new Date().getUTCMinutes()}:${new Date().getUTCSeconds()*/}`	, 10, 584);
 
 
             var logo = new Image();
             logo.src = './elTripLogo.png'
-            ctx.globalAlpha = 0.1
+            ctx.globalAlpha = 0.3
 
             ctx.drawImage(logo, (800-128), (600-128))
 
-			res.type('png')
-			res.send(Buffer.from(c.toBuffer()))
+			      res.type('png')
+			      res.send(Buffer.from(c.toBuffer()))
 
 			//res.sendFile(c.toBuffer());
 
